@@ -43,7 +43,7 @@ CREATE TABLE customers (
    country STRING,
    postal_code STRING
  ) WITH (
-    'changelog-producer' = 'lookup'
+    'changelog-producer' = 'input'
  );
 
 
@@ -99,7 +99,7 @@ CREATE TABLE country_sales (
     'merge-engine' = 'aggregation',    
     'fields.total.aggregate-function' = 'sum',
     'fields.customers_count.aggregate-function' = 'sum',
-    'changelog-producer' = 'lookup',
+    'changelog-producer' = 'full-compaction',
     'snapshot.time-retained'='60s',
     'snapshot.num-retained.min'='1',
     'snapshot.num-retained.max'='5',

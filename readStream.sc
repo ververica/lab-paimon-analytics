@@ -15,6 +15,7 @@ import org.apache.paimon.fs.Path
 
 import scala.jdk.CollectionConverters._
 import scala.collection.mutable
+import scala.concurrent.duration._
 
 val warehouse = "file:/tmp/paimon"
 val database = "default"
@@ -55,9 +56,9 @@ def printReport(table: List[(String, String)], values: Iterable[String]) = {
 }
 
 val scan = readBuilder.newStreamScan()
-println(s"scan = ${scan.asInstanceOf[AbstractInnerTableScan].options().toMap}")
 var checkpoint = Option.empty[Long]
 val report = mutable.SortedMap[String, String]()
+val scanInterval = 2.seconds
 
 while (true)
   try {
@@ -75,9 +76,9 @@ while (true)
           row.getInt(1),
           row.getInt(2)
         )).toList
-    report ++= table    
+    report ++= table
     printReport(table, report.values)
-    Thread.sleep(2000)
+    Thread.sleep(scanInterval.toMillis)
   } catch
     case e: Exception =>
       e.printStackTrace()

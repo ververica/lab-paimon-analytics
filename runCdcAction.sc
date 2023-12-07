@@ -41,7 +41,7 @@ val catalogConfig = Map(
   "warehouse" -> warehouse
 ).asJava
 val tableConfig = Map(
-  "changelog-producer" -> "lookup",
+  "changelog-producer" -> "input",
   "sink.parallelism" -> "2"
 ).asJava
 
@@ -59,7 +59,8 @@ val config = Configuration.fromMap(
   Map(
     ConfigConstants.LOCAL_START_WEBSERVER -> "true",
     BIND_PORT.key -> "8082",
-    "execution.checkpointing.interval" -> "3s"
+    "execution.checkpointing.interval" -> "3s",
+    "execution.checkpointing.max-concurrent-checkpoints" -> "4"
   ).asJava
 )
 
