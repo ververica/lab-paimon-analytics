@@ -49,8 +49,9 @@ def formatRow(row: Any*) =
   row.map(_.toString().padTo(columnWidth, ' ').take(columnWidth)).mkString
 
 def printReport(table: List[(String, String)], values: Iterable[String]) = {
+  print("\u001b[2J\u001b[;H")
   println(
-    s"\u001b[2Jlast read size: ${table.size}, last update: ${new java.util.Date()}"
+    s"last read size: ${table.size}, last update: ${new java.util.Date()}"
   )
   values.foreach(println)
 }
