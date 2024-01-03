@@ -6,12 +6,12 @@ CREATE TABLE country_sales (
 ) WITH (
     'merge-engine' = 'aggregation',    
     'fields.total.aggregate-function' = 'sum',
-    'fields.customers_count.aggregate-function' = 'sum',
+    'fields.orders_count.aggregate-function' = 'sum',
     'changelog-producer' = 'full-compaction',
     'snapshot.time-retained'='60s',
     'snapshot.num-retained.min'='1',
     'snapshot.num-retained.max'='5',
-    'full-compaction.delta-commits' = '1'
+    'full-compaction.delta-commits' = '2'
 );
 
 SET 'execution.checkpointing.interval' = '10 s';

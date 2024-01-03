@@ -2,3 +2,7 @@
 .metals
 .vscode
 lib
+.trunk
+.scala-build
+.bsp
+*.jar

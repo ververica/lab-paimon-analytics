@@ -17,11 +17,11 @@ import org.apache.paimon.catalog.{
 }
 import org.apache.paimon.fs.Path
 import org.apache.paimon.options.CatalogOptions.WAREHOUSE
+import org.apache.paimon.options.Options
 
 import scala.jdk.CollectionConverters._
 import scala.collection.mutable
 import scala.concurrent.duration._
-import org.apache.paimon.options.Options
 
 val warehouse = "s3://vvc-stage-streamhouse/datalake"
 val database = "default"
