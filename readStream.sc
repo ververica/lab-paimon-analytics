@@ -1,5 +1,9 @@
+import $ivy.`org.apache.paimon:paimon-bundle:0.6.0-incubating`
+import $ivy.`org.apache.paimon:paimon-s3:0.6.0-incubating`
 import $ivy.`org.apache.flink:flink-shaded-hadoop-2-uber:2.8.3-10.0`
-import $cp.lib.`paimon-bundle-0.7-20231201.002224-11.jar`
+import $ivy.`org.apache.hadoop:hadoop-aws:2.8.3`
+
+import $ivy.`org.slf4j:slf4j-log4j12:1.7.15`
 
 import org.apache.paimon.predicate.PredicateBuilder
 import org.apache.paimon.table.Table
@@ -12,26 +16,34 @@ import org.apache.paimon.catalog.{
   CatalogFactory
 }
 import org.apache.paimon.fs.Path
+import org.apache.paimon.options.CatalogOptions.WAREHOUSE
 
 import scala.jdk.CollectionConverters._
 import scala.collection.mutable
 import scala.concurrent.duration._
+import org.apache.paimon.options.Options
 
-val warehouse = "file:/tmp/paimon"
+val warehouse = "s3://vvc-stage-streamhouse/datalake"
 val database = "default"
 
-def createFilesystemCatalog() = {
-  val context = CatalogContext.create(new Path(warehouse))
+def createFilesystemCatalog(s3Keys: Map[String, String]) = {
+  val options =
+    Options.fromMap((s3Keys + (WAREHOUSE.key() -> warehouse)).asJava)
+  val context = CatalogContext.create(options)
   CatalogFactory.createCatalog(context)
 }
 
-def getTable() = {
+def getTable(s3Keys: Map[String, String]) = {
   val identifier = Identifier.create(database, "country_sales")
-  val catalog = createFilesystemCatalog()
+  val catalog = createFilesystemCatalog(s3Keys)
   catalog.getTable(identifier) -> catalog
 }
 
-val (table, catalog) = getTable()
+val s3Access = List(
+  sys.env.get("S3_ACCESS_KEY").map(v => "s3.access-key" -> v),
+  sys.env.get("S3_SECRET_KEY").map(v => "s3.secret-key" -> v)
+).flatten.toMap
+val (table, catalog) = getTable(s3Access)
 
 val builder = new PredicateBuilder(
   RowType.of(DataTypes.STRING(), DataTypes.INT(), DataTypes.INT())
