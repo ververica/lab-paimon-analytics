@@ -1,7 +1,7 @@
 CREATE TABLE country_sales (
     country STRING,
     total INT,
-    customers_count INT,
+    orders_count INT,
     PRIMARY KEY (country) NOT ENFORCED
 ) WITH (
     'merge-engine' = 'aggregation',    
@@ -18,7 +18,7 @@ SET 'execution.checkpointing.interval' = '10 s';
 SET 'execution.checkpointing.max-concurrent-checkpoints' = '4';
 
 INSERT INTO country_sales /*+ LOOKUP('table'='c', 'retry-predicate'='lookup_miss', 'output-mode'='allow_unordered', 'retry-strategy'='fixed_delay', 'fixed-delay'='1s', 'max-attempts'='600') */
-SELECT c.country, o.total, 1 as customers_count
+SELECT c.country, o.total, 1 as orders_count
 FROM orders as o
 JOIN customers /*+ OPTIONS('lookup.cache-rows'='100', 'lookup.async'='true', 'lookup.async-thread-number'='16') */
 FOR SYSTEM_TIME AS OF o.proc_time AS c

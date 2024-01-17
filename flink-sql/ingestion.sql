@@ -12,7 +12,7 @@ CREATE TEMPORARY TABLE customers_gen (
 ) WITH (
  'connector' = 'faker',
  'number-of-rows' = '100',   
- 'fields.id.expression' = '#{number.numberBetween ''1'',''10''}',
+ 'fields.id.expression' = '#{number.numberBetween ''1'',''11''}',
  'fields.name.expression' = '#{harry_potter.character}',
  'fields.country.expression' = '#{Address.country}',
  'fields.postal_code.expression' = '#{number.numberBetween ''100001'',''699999''}'
@@ -72,4 +72,5 @@ CREATE TABLE orders (
 
 SET 'execution.checkpointing.interval' = '10 s';
 SET 'execution.checkpointing.max-concurrent-checkpoints' = '4';
+SET 'pipeline.name' = 'Generate Orders';
 insert into orders select * from orders_gen;

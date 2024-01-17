@@ -27,7 +27,7 @@ merge:
 cdc:
 	flink run -d \
 		-D execution.checkpointing.interval='10 s' \
-		lib/paimon-flink-action-0.7-20231130.002027-8.jar \
+		lib/paimon-flink-action-0.6.0-incubating.jar \
 		mysql-sync-table \
 		--warehouse /tmp/paimon \
 		--database default \
